@@ -13,7 +13,8 @@ router.post('/', async (request, response) => {
 })
 
 router.get('/', async (request, response) => {
-  const orders = await Order.find({ customerId: request.customer.id })
+  const filter = request.customer.role === 'admin' ? {} : { customerId: request.customer.id }
+  const orders = await Order.find(filter)
     .populate('customerId', 'name email')
     .populate('restaurantId', 'name cuisine')
   response.status(200).json(orders)
