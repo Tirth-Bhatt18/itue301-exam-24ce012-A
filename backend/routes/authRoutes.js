@@ -12,13 +12,15 @@ router.post('/login', async (request, response) => {
     throw error
   }
 
+  const environment = globalThis.process?.env || {}
+  const role = email === (environment.ADMIN_EMAIL || 'admin@quickbite.local') ? 'admin' : 'customer'
   const customer = await Customer.findOneAndUpdate(
     { email },
-    { $setOnInsert: { name: name || email.split('@')[0], email } },
+    { $set: { role }, $setOnInsert: { name: name || email.split('@')[0], email } },
     { new: true, upsert: true, runValidators: true },
   )
 
-  response.status(200).json({ customer, token: `customer:${customer._id}` })
+  response.status(200).json({ customer, token: `customer:${customer._id}:${role}` })
 })
 
 export default router

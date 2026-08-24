@@ -1,16 +1,50 @@
-# React + Vite
+# QuickBite Food Ordering System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+QuickBite is a React, Express, and MongoDB food ordering application for the ITUE301 Advanced Web Development Frameworks practical examination.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install dependencies:
 
-## React Compiler
+```bash
+npm install
+npm install --prefix backend
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Create `.env` in the project root from `.env.example`. Set `MONGO_URI` to your MongoDB Atlas connection string and `PORT=5000`. Set `ADMIN_EMAIL` to the email used for the admin login. The backend also accepts the existing `DB_STRING` variable.
 
-## Expanding the ESLint configuration
+In MongoDB Atlas, create a database user, allow your development IP address, and use collections named `Customer`, `Restaurant`, and `Order`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Run
+
+Backend:
+
+```bash
+cd backend
+npm start
+```
+
+Frontend, in a second terminal:
+
+```bash
+npm run dev
+```
+
+The Vite server proxies `/api` requests to `http://localhost:5000`.
+
+## API Endpoints
+
+- `POST /api/v1/auth/login`
+- `GET /api/v1/restaurants`
+- `POST /api/v1/orders` (Bearer token required)
+- `GET /api/v1/orders` (Bearer token required)
+- `PATCH /api/v1/orders/:id/status` (Bearer token required)
+
+Admin restaurant operations use `POST`, `PATCH /api/v1/restaurants/:id`, and `DELETE /api/v1/restaurants/:id` with the admin Bearer token.
+
+## Checks
+
+```bash
+npm run build
+npm run lint
+```

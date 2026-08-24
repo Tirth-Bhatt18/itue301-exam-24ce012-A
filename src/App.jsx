@@ -30,7 +30,9 @@ function App() {
             path="/admin"
             element={
               <Suspense fallback={<p>Loading admin panel...</p>}>
-                <AdminPanel />
+                <ProtectedRoute requiredRole="admin">
+                  <AdminPanel />
+                </ProtectedRoute>
               </Suspense>
             }
           />
