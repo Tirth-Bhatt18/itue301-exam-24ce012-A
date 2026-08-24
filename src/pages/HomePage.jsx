@@ -5,10 +5,25 @@ function HomePage() {
   const { customer, login, logout } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [loginError, setLoginError] = useState('')
 
-  function handleSignIn(event) {
+  async function handleSignIn(event) {
     event.preventDefault()
-    login({ name, email }, 'demo-token')
+    setLoginError('')
+
+    try {
+      const response = await fetch('/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error?.message || 'Unable to sign in')
+      login(data.customer, data.token)
+    } catch (requestError) {
+      setLoginError(requestError.message)
+    }
   }
 
   return (
@@ -32,6 +47,7 @@ function HomePage() {
             <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
           </label>
           <button type="submit">Sign in</button>
+          {loginError && <p role="alert">{loginError}</p>}
         </form>
       )}
     </main>
